@@ -5,22 +5,22 @@ CREATE TABLE IF NOT EXISTS proposals (
     proposal_id   TEXT PRIMARY KEY,
     client_name   TEXT NOT NULL,
     system_type   TEXT NOT NULL,
-    status        TEXT NOT NULL,
+    status        TEXT NOT NULL CHECK (status IN ('site_survey','permitting','scheduled','installed')),
     install_date  TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS equipment (
     item_name     TEXT PRIMARY KEY,
     category      TEXT NOT NULL,
-    price         REAL NOT NULL,
-    stock         INTEGER NOT NULL
+    price         REAL NOT NULL CHECK (price >= 0),
+    stock         INTEGER NOT NULL CHECK (stock >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS change_requests (
     number        INTEGER PRIMARY KEY AUTOINCREMENT,
     proposal_id   TEXT NOT NULL,
     new_value     TEXT NOT NULL,
-    status        TEXT NOT NULL DEFAULT 'waiting'
+    status        TEXT NOT NULL DEFAULT 'waiting' CHECK (status IN ('waiting','approved','rejected'))
 );
 
 INSERT OR IGNORE INTO proposals (proposal_id, client_name, system_type, status, install_date) VALUES
